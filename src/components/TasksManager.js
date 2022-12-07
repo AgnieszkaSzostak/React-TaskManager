@@ -1,5 +1,5 @@
 import React from 'react';
-
+import {put, post} from './TasksProvider'
 class TasksManager extends React.Component {
     state = {
         task: {
@@ -29,21 +29,10 @@ class TasksManager extends React.Component {
             isRunning: this.state.task.isRunning,
             isDone: this.state.task.isDone,
             isRemoved: this.state.task.isRemoved
-
-        }
-        const options = {
-            method: 'POST',
-            body: JSON.stringify(newTask),
-            headers: {'Content-Type': 'application/json'}
         }
 
-        fetch('http://localhost:3005/tasks', options)
-            .then(resp =>{
-                if(resp.ok){
-                    return resp.json()
-                }
-                return Promise.reject(resp)
-            })
+        console.log('e', e.target.elements);
+        post(newTask)
             .then(data => this.setState(state => {
                 const arr = [data]
                 console.log(arr);
@@ -51,12 +40,11 @@ class TasksManager extends React.Component {
                     tasks: [...arr, ...state.tasks]
                 }
             }))
-        
-            .catch(err => console.error(err))
     }
     
     changeHandler = e => {
         const { name, value} = e.target
+        
         this.setState(
             this.state.task = {...this.state.task, [name]: value})
     }
@@ -82,38 +70,8 @@ class TasksManager extends React.Component {
             counter: counter
         }
     }
-    incrementTime(id){
-        this.setState(state => {
-            const newTasks = state.tasks.map(task=> {
-                if(task.id === id){
-                    return{...task,
-                    isRunning: true, time: this.setTimer(task.time.counter)}
-                }
-                return task
-            })
-            return { tasks: newTasks}
-        }, ()=>{
-   
-            const data = this.state.tasks.filter(task => {
-                if(task.id === id){
-                    return task
-                } });
-                this.fetchData(data[0], id);
-        })
-    }
-    fetchData(data, id){
-        const options = {
-            method: 'PUT',
-            body: JSON.stringify(data),
-            headers: { 'Content-Type': 'application/json' }
-        }
-        fetch(`http://localhost:3005/tasks/${id}`, options)
-        .then(resp => resp)
-        .catch(err => console.error(err))
-    }
-
     sortTasks(id){
-        const newTasks = this.state.tasks.map(task => task).sort(function compareFunc(a,b) {
+        const newTasks = this.state.tasks.map((task) => task).sort(function compareFunc(a,b) {
             if(b.id === id){
                 return -1
             }else if(a.id === id){
@@ -122,82 +80,92 @@ class TasksManager extends React.Component {
                 return 0
             }
         })
-        this.setState( {
+        this.setState({
                 tasks: newTasks,
-            }
-        )
+        })
     }
-    clickHandler = (e, id) => {
-        if(e.target.value === 'isDone'){
+    removeHandler(taskId){
+        this.setState(state => {
+            const newTasks = state.tasks.map((task) => {
+                if(task.id === taskId){
+                    return {...task, isRemoved: true}
+                }
+                return task
+            })
+            return {tasks: newTasks}
+        }, ()=> {
+                const data = this.state.tasks.find(task => task.id === taskId);
+                put(data, taskId);
+                this.sortTasks(taskId);
+            })
+    }
+    finishHandler(taskId){
+        this.setState(state => {
+            const newTasks = state.tasks.map((task) => {
+                if(task.id === taskId){
+                    if(task.isRunning === true){
+                        clearInterval(this.id);
+                        // run this.stopHandler
+                        return {...task, isRunning: false}
+                    }
+                    return {...task, isDone: true}
+                }
+                return task
+            })
+            return {tasks: newTasks}
+        }, 
+        ()=> {
+            const data = this.state.tasks.find(element => element.id === taskId);
+            put(data, taskId);
+            this.sortTasks(taskId);
+        })
+    }
+    incrementTime(taskId){
+        this.intervalId = setInterval(() => {
             this.setState(state => {
-                const newTasks = state.tasks.map(task => {
-                    if(task.id === id){
-                        if(task.isRunning === true){
-                            console.log(this.id);
-                            clearInterval(this.id);
-                        }
-                        return {...task, isDone: true, isRunning: false}
+                const newTasks = state.tasks.map((task) => {
+                    if(task.id === taskId){
+                        return {...task, isRunning: true, time: this.setTimer(task.time.counter)}
                     }
                     return task
                 })
                 return {tasks: newTasks}
-            }, 
-            ()=> {
-                const data = this.state.tasks.map(task => task);
-                this.fetchData(data[0], id);
-                this.sortTasks(id);
+            }, () => {
+                const data = this.state.tasks.find(element => element.isRunning);
+                put(data, taskId);
             })
-        }
-        if(e.target.value === 'isRunning'){
-            this.state.tasks.forEach(task => {
-                if(task.id !== id){
-                    if(task.isRunning === true){
-                        this.setState(state => {
-                            const newTasks = state.tasks.map(task => {
-                                if(task.id !==id && task.isRunning === true){
-                                    console.log('here it is', this.id);
-                                    clearInterval(this.id);
-                                    return {...task, isRunning: false}
-                                }
-                                return task
-                            })
-                            return {tasks: newTasks}
-                        })
-                    }
+        }, 1000)
+    }
+    stopHandler(taskId){
+        clearInterval(this.intervalId);
+        console.log(taskId)
+        this.setState(state=> {
+            const newTasks = state.tasks.map((task) => {
+                if(task.id === taskId){
+                    return {...task, isRunning: false}
                 }
-            });
-            this.state.tasks.forEach(task => {
-                if(task.id === id){
-                    if(task.isRunning === true){
-                        this.setState(state => {
-                            const newTasks =state.tasks.map(task => {
-                                if(task.id === id && task.isRunning ===true){
-                                    clearInterval(this.id);
-                                    return {...task, isRunning: false}
-                                }
-                                return task
-                            })
-                            return {tasks: newTasks}
-                        })
-                    }else{
-                        this.id = setInterval(()=> {
-                            this.incrementTime(id)
-                        }, 1000)
-                    }
-                }
+                return task
             })
-        }
-        if(e.target.value === 'isRemoved'){
-            this.setState(state => {
-                const newTasks = state.tasks.map(task => {
-                    if(task.id === id){
-                        return {...task, isRemoved: true}
-                    }
-                    return task
-                })
-                return {tasks: newTasks}
-            })
-        }
+            return {tasks: newTasks}
+        }, () => {
+            const data = this.state.tasks.find(task => task.id === taskId);
+            put(data, taskId)
+            
+        })
+    }
+    startHandler(taskId){
+        
+        // Find running task > clearInterval > update state > fetch > run proper task
+
+        // if(this.state.tasks.some(task => task.isRunning)){
+        //     const runningTask = this.state.tasks.find(task => task.isRunning);
+        //     console.log(runningTask.id)
+        //     this.stopHandler(runningTask.id);
+        //     this.incrementTime(taskId);
+
+        // }else{
+                this.incrementTime(taskId)
+        // }
     }
     render() {
         return (
@@ -216,9 +184,9 @@ class TasksManager extends React.Component {
                             <section key={task.id}>
                                 <header>{task.name} timer: {task.time.hours}:{task.time.minutes}:{task.time.seconds}</header>
                                 <footer>
-                                    <button value="isRunning" disabled={task.isDone}onClick={(e)=>this.clickHandler(e, task.id)}>start/stop</button>
-                                    <button value="isDone" disabled={task.isDone} onClick={(e)=> this.clickHandler(e, task.id)}>zakończone</button>
-                                    <button value="isRemoved" disabled={!task.isDone} onClick={(e) => this.clickHandler(e, task.id)}>usuń</button>
+                                    <button value="isRunning" disabled={task.isDone}onClick={(e)=>task.isRunning ? this.stopHandler(task.id) : this.startHandler(task.id)}>start/stop</button>
+                                    <button value="isDone" disabled={task.isDone} onClick={(e)=> this.finishHandler(task.id)}>zakończone</button>
+                                    <button value="isRemoved" disabled={!task.isDone} onClick={(e) => this.removeHandler(task.id)}>usuń</button>
                                 </footer>
                             </section>
                         )
