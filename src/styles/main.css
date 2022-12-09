@@ -1,3 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+*{
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
 body {
-    background: #dcdcdc;
+    background: #252839;
+    box-sizing: border-box;
+}
+.manager{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* display: flex;
+    flex-direction: column;
+    text-align: center; */
+}
+.manager__headline{
+    
+    font-size: 3em;
+    letter-spacing: 1px;
+    font-weight: bold;
+    position: relative;
+    color: #252839;
+    -webkit-text-stroke: 0.3vw #383d52;
+    text-transform: uppercase;
+}
+.manager__headline::before{
+    
+    content: 'TasksManager';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    color: #01fe87;
+    -webkit-text-stroke: 0.3vw #383d52;
+    border-right: 2px solid #01fe87;
+    overflow: hidden;
+    animation: animate 6s linear infinite;
+
+}
+.form{
+    position: relative;
+    width: 250px;
+}
+.form__input{
+    width: 100%;
+    padding: 5px;
+    align-self: center;
+    border-radius: 5px;
+    border: 1px solid#383d52;
+    background-color: #252839;
+    outline: none;
+    color: #fff;
+    font-size: 0.8em;
+    transition: 0.5s;
+    
+    
+}
+.form__label{
+    pointer-events: none;
+    position: absolute;
+    left:0;
+    padding: 5px 10px;
+    color: #383d52;
+    font-size: 0.8em;
+    text-transform: uppercase;
+    transition: 0.5s;
+}
+.form .form__input:valid ~ .form__label,
+.form .form__input:focus ~ .form__label{
+    color:#01fe87;
+    transform: translateX(10px) translateY(-7px);
+    padding: 0 5px;
+    font-size: 0.6em;
+    background-color: #252839;
+    border-left: 1px solid #01fe87;
+    border-right: 1px solid #01fe87;
+    letter-spacing: 0.2em;
+}
+/* .form:nth-child(2) .form__input:valid ~ .form__label,
+.form:nth-child(2) .form__input:focus ~ .form__label{
+    background-color: #01fe87;
+    color: #383d52;
+    border-radius: 2px;
+} */
+
+.form .form__input:valid,
+.form .form__input:focus {
+    border: 1px solid#01fe87;
+}
+@keyframes animate {
+    0%, 10%, 100%
+    {
+        width: 0;
+    }
+    70%, 90%
+    {
+        width: 100%;
+    }
 }
