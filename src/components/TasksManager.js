@@ -1,5 +1,6 @@
 import React from 'react';
 import {put, post} from './TasksProvider'
+
 class TasksManager extends React.Component {
     state = {
         task: {
@@ -10,6 +11,10 @@ class TasksManager extends React.Component {
             isRemoved: false,
         },
         tasks: [],
+    }
+    constructor(props){
+        super(props);
+        this.props 
     }
     onClick = () => {
         const { tasks } = this.state;
@@ -87,9 +92,17 @@ class TasksManager extends React.Component {
             })
     }
     finishHandler = (taskId) => {
+        if(this.interval){
+            clearInterval(this.interval);
+            this.interval = null;
+            console.log(this.interval)
+        }
         this.setState(state => {
             const newTasks = state.tasks.map((task) => {
                 if(task.id === taskId){
+                    if(task.isRunning){
+                        return{...task, isDone: true, isRunning: false}
+                    }
                     return {...task, isDone: true}
                 }
                 return task
@@ -105,7 +118,8 @@ class TasksManager extends React.Component {
     stopHandler = (taskId) => {
         clearInterval(this.interval);
         this.interval = null;
-        this.setState(state=> {
+        console.log(this.interval)
+        this.setState((state)=> {
             const newTasks = state.tasks.map((task) => {
                 if(task.id === taskId){
                     return {...task, isRunning: false}
@@ -119,21 +133,22 @@ class TasksManager extends React.Component {
         })
     }
     startHandler = (taskId) => {
-       this.interval = setInterval(()=> {
-           this.setState(state => {
-               const newTasks = state.tasks.map((task) => {
-                   if(task.id === taskId){
-                       return {...task, isRunning: true, time: task.time + 1}
-                   }
-                   return task
-               })
-               return { tasks: newTasks}
-           }, () => {
-               const data = this.state.tasks.find(element => element.isRunning);
-               put(data, taskId);
-           })
-        },1000)
-        
+        if(!this.interval){
+            this.interval = setInterval(()=> {
+                this.setState(state => {
+                    const newTasks = state.tasks.map((task) => {
+                        if(task.id === taskId){
+                            return {...task, isRunning: true, time: task.time + 1}
+                        }
+                        return task
+                    })
+                    return { tasks: newTasks}
+                }, () => {
+                    const data = this.state.tasks.find(element => element.isRunning);
+                    put(data, taskId);
+                })
+             },1000)
+        }
     }
     render() {
         return (
@@ -143,16 +158,19 @@ class TasksManager extends React.Component {
                     <form className="form" onSubmit={this.sendTask}>
                         <input className="form__input" required="required" type="text" name="name" value={this.state.task.name} onChange={this.changeHandler} />
                         <label className="form__label"htmlFor="task">Task name</label>
-                        <input type="submit" />
+                        <button className="form__button button">Add<input className="button-input" type="submit"/></button>
                     </form>
                 </section>
                 {this.state.tasks.map((task) => {
                     if(task.isRemoved === false){
                         return (
-                            <section key={task.id}>
-                                <header>{task.name} timer: {this.createTimer(task.time)}</header>
-                                <footer>
-                                    <button value="isRunning" 
+                            <section className="task"key={task.id}>
+                                <header className="task__header">
+                                    <h2 className="task__title">{task.name}</h2>
+                                    <div className="task__timer">{this.createTimer(task.time)}</div>
+                                </header>
+                                <footer className="task__footer">
+                                    <button className="task__button button" value="isRunning" 
                                         disabled={
                                             task.isDone || (this.interval && !task.isRunning) 
                                                 ? true 
@@ -164,14 +182,8 @@ class TasksManager extends React.Component {
                                                 : this.startHandler(task.id)
                                         }
                                     >start/stop</button>
-                                    <button value="isDone" disabled={task.isDone} onClick={()=> {
-                                        if(task.isRunning){
-                                        this.stopHandler(task.id);
-                                        this.finishHandler(task.id);
-                                    }else{
-                                        this.finishHandler(task.id)
-                                    }}}>zakończone</button>
-                                    <button value="isRemoved" disabled={!task.isDone} onClick={() => this.removeHandler(task.id)}>usuń</button>
+                                    <button className="task__button button" value="isDone" disabled={task.isDone } onClick={() => this.finishHandler(task.id)}>end</button>
+                                    <button className="task__button button" value="isRemoved" disabled={!task.isDone} onClick={() => this.removeHandler(task.id)}>delete</button>
                                 </footer>
                             </section>
                         )
