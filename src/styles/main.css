@@ -14,6 +14,8 @@ body {
 */
 .button-input{
     display:none;
+  
+
 }
 .button{
     color: #01fe87; 
@@ -91,7 +93,7 @@ body {
 }
 .form{
     position: relative;
-    
+    display: flex;
 }
 .form__input{
     width: 100%;
@@ -101,7 +103,6 @@ body {
     border: 1px solid#383d52;
     background-color: #252839;
     outline: none;
-    color: ;
     font-size: 1em;
     transition: 0.5s;
 }
@@ -119,9 +120,9 @@ body {
 .form .form__input:valid ~ .form__label,
 .form .form__input:focus ~ .form__label{
     color:#01fe87;
-    
-    transform: translateX(55px) translateY(-15px);
-    padding: 0.25em 1em;
+
+    transform: translateX(50px) translateY(-15px);
+    padding: 0.1em 1em;
     font-size: 0.6em;
     background-color: #252839;
     border-left: 1px solid #01fe87;
@@ -134,7 +135,7 @@ body {
     border: 1px solid#01fe87;
 }
 .form__button{
-
+    margin-left: 0.25em;
 }
 
 @keyframes animate {
