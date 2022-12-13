@@ -36,7 +36,7 @@ class TasksManager extends React.Component {
                 return {
                     tasks: [...arr, ...state.tasks]
                 }
-            }))
+        }))
     }
     
     changeHandler = e => {
