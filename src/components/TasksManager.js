@@ -1,5 +1,6 @@
 import React from 'react';
 import {put, post} from './TasksProvider'
+// refactor setState func!
 
 class TasksManager extends React.Component {
     state = {
@@ -87,7 +88,7 @@ class TasksManager extends React.Component {
             return {tasks: newTasks}
         }, ()=> {
                 const data = this.state.tasks.find(task => task.id === taskId);
-                put(data, taskId);
+                put(data);
                 this.sortTasks(taskId);
             })
     }
@@ -100,10 +101,7 @@ class TasksManager extends React.Component {
         this.setState(state => {
             const newTasks = state.tasks.map((task) => {
                 if(task.id === taskId){
-                    if(task.isRunning){
-                        return{...task, isDone: true, isRunning: false}
-                    }
-                    return {...task, isDone: true}
+                    return {...task, isDone: true, isRunning:false}
                 }
                 return task
             })
@@ -111,7 +109,7 @@ class TasksManager extends React.Component {
         }, 
         ()=> {
             const data = this.state.tasks.find(element => element.id === taskId);
-            put(data, taskId);
+            put(data);
             this.sortTasks(taskId);
         })
     }
@@ -129,7 +127,7 @@ class TasksManager extends React.Component {
             return { tasks: newTasks}
         }, () => {
             const data = this.state.tasks.find(task => task.id === taskId);
-            put(data, taskId)
+            put(data)
         })
     }
     startHandler = (taskId) => {
@@ -145,7 +143,7 @@ class TasksManager extends React.Component {
                     return { tasks: newTasks}
                 }, () => {
                     const data = this.state.tasks.find(element => element.isRunning);
-                    put(data, taskId);
+                    put(data);
                 })
              },1000)
         }
