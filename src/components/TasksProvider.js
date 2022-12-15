@@ -1,13 +1,13 @@
 
 const url = 'http://localhost:3005/tasks/'
 
-export function put(data, id = ''){
+export function put(data){
     const options = {
         method: 'PUT',
         body: JSON.stringify(data),
         headers: { 'Content-Type': 'application/json' }
     }
-    return fetchData(options, id);
+    return fetchData(options, data.id);
 }
 export function post (data){
     const options = {
