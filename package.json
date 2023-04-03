@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack serve --mode development --open",
-    "build": "webpack --mode production"
+    "build": "webpack --mode production",
+    "server": "json-server --watch ./db/data.json --port 3005"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +25,7 @@
     "webpack-dev-server": "^4.11.1"
   },
   "dependencies": {
+    "@hedgineering/time-counter": "^1.0.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   }

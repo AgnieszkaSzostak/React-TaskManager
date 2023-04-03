@@ -89,7 +89,6 @@ body {
     border-right: 2px solid #01fe87;
     overflow: hidden;
     animation: animate 6s linear infinite;
-
 }
 .form{
     position: relative;

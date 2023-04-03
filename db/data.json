@@ -1,3 +1,84 @@
 {
-  "tasks": []
+  "tasks": [
+    {
+      "name": "Agnieszka Szostak",
+      "time": 0,
+      "isRunning": false,
+      "isDone": true,
+      "isRemoved": true,
+      "id": 1
+    },
+    {
+      "name": "Agnieszka Szostak",
+      "time": 0,
+      "isRunning": false,
+      "isDone": true,
+      "isRemoved": true,
+      "id": 2
+    },
+    {
+      "name": "Agnieszka Szostak",
+      "time": 0,
+      "isRunning": false,
+      "isDone": true,
+      "isRemoved": true,
+      "id": 3
+    },
+    {
+      "name": "a",
+      "time": 0,
+      "isRunning": false,
+      "isDone": true,
+      "isRemoved": true,
+      "id": 4
+    },
+    {
+      "name": "a",
+      "time": 0,
+      "isRunning": false,
+      "isDone": true,
+      "isRemoved": true,
+      "id": 5
+    },
+    {
+      "name": "a",
+      "time": 0,
+      "isRunning": false,
+      "isDone": true,
+      "isRemoved": true,
+      "id": 6
+    },
+    {
+      "name": "a",
+      "time": 0,
+      "isRunning": false,
+      "isDone": true,
+      "isRemoved": true,
+      "id": 7
+    },
+    {
+      "name": "a",
+      "time": 0,
+      "isRunning": false,
+      "isDone": true,
+      "isRemoved": true,
+      "id": 8
+    },
+    {
+      "name": "a",
+      "time": 0,
+      "isRunning": false,
+      "isDone": true,
+      "isRemoved": true,
+      "id": 9
+    },
+    {
+      "name": "Task 1",
+      "time": 3,
+      "isRunning": false,
+      "isDone": true,
+      "isRemoved": true,
+      "id": 10
+    }
+  ]
 }

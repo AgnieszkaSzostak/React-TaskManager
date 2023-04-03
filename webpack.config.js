@@ -28,7 +28,7 @@ module.exports = {
                 // wszystkie pliki, których nazwa
                 // kończy się na .css
                 use: [
-                    'style-loader',
+                    'style-loader', 
                     // dodaj odczytaną zawartość
                     // do znacznika <style/>
                     'css-loader', 
